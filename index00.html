@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Inquiry Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a3a8f 0%, #0d6efd 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #1a3a8f;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h2 {
+            font-weight: 600;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #ff9e3d);
+        }
+        
+        .form-body {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .section-title {
+            grid-column: span 2;
+            font-size: 20px;
+            color: #1a3a8f;
+            margin: 10px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .required::after {
+            content: '*';
+            color: #e22d2d;
+            margin-left: 4px;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #1a3a8f;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #1a3a8f;
+            box-shadow: 0 0 0 3px rgba(26, 58, 143, 0.2);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: #1a3a8f;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #0d6efd;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f5f7ff;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .footer a {
+            color: #1a3a8f;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .privacy-note {
+            display: flex;
+            align-items: center;
+            background: #e8f4ff;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .privacy-note i {
+            color: #1a3a8f;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .privacy-note p {
+            font-size: 14px;
+            color: #444;
+        }
+        
+        @media (max-width: 768px) {
+            .form-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width, .section-title {
+                grid-column: span 1;
+            }
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .success-message i {
+            font-size: 60px;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+        
+        .success-message h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .success-message p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Loan Application Form</h2>
+            <p>Fill out this form and we'll contact you with the best loan options</p>
+        </div>
+        
+        <form id="loanForm" action="https://formsubmit.co/prashant.waghode358@gmail.com" method="POST">
+            <!-- FormSubmit will send data to your email -->
+            <input type="hidden" name="_subject" value="New Loan Inquiry from Website">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="#successMessage">
+            
+            <div class="form-body">
+                <div class="section-title">Personal Information</div>
+                
+                <div class="form-group">
+                    <label for="firstName" class="required">First Name</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName" class="required">Last Name</label>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="required">Email Address</label>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone" class="required">Phone Number</label>
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dob" class="required">Date of Birth</label>
+                    <div class="input-group">
+                        <i class="fas fa-calendar"></i>
+                        <input type="date" id="dob" name="dob" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pan" class="required">PAN Card Number</label>
+                    <div class="input-group">
+                        <i class="fas fa-id-card"></i>
+                        <input type="text" id="pan" name="pan" placeholder="e.g. ABCDE1234F" required>
+                    </div>
+                </div>
+                
+                <div class="section-title">Loan Details</div>
+                
+                <div class="form-group">
+                    <label for="loanType" class="required">Loan Type</label>
+                    <div class="input-group">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <select id="loanType" name="loanType" required>
+                            <option value="">Select loan type</option>
+                            <option value="personal">Personal Loan</option>
+                            <option value="home">Home Loan</option>
+                            <option value="car">Car Loan</option>
+                            <option value="business">Business Loan</option>
+                            <option value="education">Education Loan</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loanAmount" class="required">Loan Amount (₹)</label>
+                    <div class="input-group">
+                        <i class="fas fa-rupee-sign"></i>
+                        <input type="number" id="loanAmount" name="loanAmount" placeholder="Desired loan amount" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="income" class="required">Annual Income (₹)</label>
+                    <div class="input-group">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <input type="number" id="income" name="income" placeholder="Your annual income" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="employment" class="required">Employment Type</label>
+                    <div class="input-group">
+                        <i class="fas fa-briefcase"></i>
+                        <select id="employment" name="employment" required>
+                            <option value="">Select employment type</option>
+                            <option value="salaried">Salaried</option>
+                            <option value="self-employed">Self-Employed</option>
+                            <option value="business">Business Owner</option>
+                            <option value="retired">Retired</option>
+                            <option value="student">Student</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="city" class="required">City</label>
+                    <div class="input-group">
+                        <i class="fas fa-city"></i>
+                        <input type="text" id="city" name="city" placeholder="Your city" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pincode" class="required">Pincode</label>
+                    <div class="input-group">
+                        <i class="fas fa-map-pin"></i>
+                        <input type="text" id="pincode" name="pincode" placeholder="Area pincode" required>
+                    </div>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="message">Additional Message (Optional)</label>
+                    <div class="input-group">
+                        <i class="fas fa-comment"></i>
+                        <textarea id="message" name="message" placeholder="Any specific requirements or questions"></textarea>
+                    </div>
+                </div>
+                
+                <div class="form-group full-width">
+                    <div class="privacy-note">
+                        <i class="fas fa-shield-alt"></i>
+                        <p>Your information is secure and will only be used to provide you with loan options. We do not share your data with third parties without your consent.</p>
+                    </div>
+                </div>
+                
+                <div class="form-group full-width">
+                    <button type="submit" class="btn">
+                        <i class="fas fa-paper-plane"></i> Submit Application
+                    </button>
+                </div>
+            </div>
+        </form>
+        
+        <div class="footer">
+            <p>© 2023 Loan Solutions. All rights reserved. Read our <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a></p>
+        </div>
+    </div>
+    
+    <div class="success-message" id="successMessage">
+        <i class="fas fa-check-circle"></i>
+        <h3>Application Submitted Successfully!</h3>
+        <p>Thank you for your loan inquiry. We have received your information and one of our loan specialists will contact you shortly with the best options.</p>
+        <button class="btn" onclick="resetForm()">
+            <i class="fas fa-plus"></i> Submit Another Application
+        </button>
+    </div>
+
+    <script>
+        // Handle form submission
+        document.getElementById('loanForm').addEventListener('submit', function(e) {
+            // Basic validation
+            const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'dob', 'pan', 
+                                  'loanType', 'loanAmount', 'income', 'employment', 'city', 'pincode'];
+            
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                const input = document.getElementById(field);
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.style.borderColor = '#e22d2d';
+                } else {
+                    input.style.borderColor = '#ddd';
+                }
+            });
+            
+            // Email validation
+            const email = document.getElementById('email').value;
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                isValid = false;
+                document.getElementById('email').style.borderColor = '#e22d2d';
+                alert('prashant.waghode358@gmail.com');
+            }
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // If validation passes, the form will submit to FormSubmit
+            // FormSubmit will then redirect to the success message
+        });
+        
+        function resetForm() {
+            document.querySelector('.container').style.display = 'flex';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            // Clear all form fields
+            const fieldsToClear = ['firstName', 'lastName', 'email', 'phone', 'dob', 'pan', 
+                                 'loanType', 'loanAmount', 'income', 'employment', 'city', 'pincode', 'message'];
+            
+            fieldsToClear.forEach(field => {
+                document.getElementById(field).value = '';
+            });
+        }
+        
+        // Check if we're on the success page (after form submission)
+        if (window.location.hash === '#successMessage') {
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+        }
+    </script>
+</body>
+
+</html>
